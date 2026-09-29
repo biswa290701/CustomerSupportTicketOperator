@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+{% block title %}{{ ticket.id }} · Support Dashboard{% endblock %}
+
+{% block content %}
+<p><a href="/" data-testid="back-to-list">&larr; Back to ticket list</a></p>
+
+<h1 data-testid="ticket-subject">{{ ticket.subject }}</h1>
+
+{% if flash %}
+<p class="flash" data-testid="flash-message">{{ flash }}</p>
+{% endif %}
+
+<dl class="ticket-meta">
+  <div>
+    <dt>Ticket ID</dt>
+    <dd data-testid="ticket-id">{{ ticket.id }}</dd>
+  </div>
+  <div>
+    <dt>Customer</dt>
+    <dd data-testid="ticket-customer">{{ ticket.customer_name }}</dd>
+  </div>
+  <div>
+    <dt>Created (UTC)</dt>
+    <dd data-testid="ticket-created-at">{{ ticket.created_at }}</dd>
+  </div>
+  <div>
+    <dt>Category</dt>
+    <dd data-testid="ticket-category">{{ ticket.category.value }}</dd>
+  </div>
+  <div>
+    <dt>Priority</dt>
+    <dd data-testid="ticket-priority">{{ ticket.priority.value }}</dd>
+  </div>
+  <div>
+    <dt>Status</dt>
+    <dd data-testid="ticket-status">{{ ticket.status.value }}</dd>
+  </div>
+</dl>
+
+<section class="panel">
+  <h2>Description</h2>
+  <p data-testid="ticket-description">{{ ticket.description }}</p>
+</section>
+
+<section class="panel">
+  <h2>Triage</h2>
+  <form method="post" action="/tickets/{{ ticket.id }}/triage" data-testid="triage-form">
+    <label>
+      Category
+      <select name="category" data-testid="select-category">
+        {% for c in all_categories %}
+        <option value="{{ c.value }}" {% if ticket.category == c %}selected{% endif %}>{{ c.value }}</option>
+        {% endfor %}
+      </select>
+    </label>
+
+    <label>
+      Priority
+      <select name="priority" data-testid="select-priority">
+        {% for p in all_priorities %}
+        <option value="{{ p.value }}" {% if ticket.priority == p %}selected{% endif %}>{{ p.value }}</option>
+        {% endfor %}
+      </select>
+    </label>
+
+    <label>
+      Status
+      <select name="status" data-testid="select-status">
+        {% for s in all_statuses %}
+        <option value="{{ s.value }}" {% if ticket.status == s %}selected{% endif %}>{{ s.value }}</option>
+        {% endfor %}
+      </select>
+    </label>
+
+    <button type="submit" data-testid="save-triage">Save changes</button>
+  </form>
+</section>
+
+<section class="panel">
+  <h2>Draft response</h2>
+  <p class="hint" data-testid="ticket-draft">{{ ticket.draft_response or '' }}</p>
+  <form method="post" action="/tickets/{{ ticket.id }}/draft" data-testid="draft-form">
+    <textarea name="draft_response" rows="6" cols="60"
+              data-testid="draft-response">{{ ticket.draft_response or '' }}</textarea>
+    <div>
+      <button type="submit" data-testid="save-draft">Save draft</button>
+    </div>
+  </form>
+</section>
+{% endblock %}

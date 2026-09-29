@@ -1,0 +1,35 @@
+# --- Environments -----------------------------------------------------------
+.venv/
+venv/
+env/
+.env
+
+# --- Python artefacts -------------------------------------------------------
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# --- Runtime data -----------------------------------------------------------
+# SQLite files contain live ticket data; never commit them.
+data/
+*.db
+*.sqlite
+*.sqlite3
+
+# --- Generated evidence -----------------------------------------------------
+# Screenshots and operator logs are produced at run time.
+evidence/
+
+# --- Browser binaries -------------------------------------------------------
+# `playwright install chromium` output if ever placed inside the repo.
+ms-playwright/
+playwright/
+
+# --- Editors / OS -----------------------------------------------------------
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db

@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+{% block title %}Ticket list · Support Dashboard{% endblock %}
+
+{% block content %}
+<h1 data-testid="page-title">Tickets</h1>
+
+<form class="filters" method="get" action="/" data-testid="filter-form">
+  <label>
+    Status
+    <select name="status" data-testid="filter-status">
+      <option value="" {% if filters.status is none %}selected{% endif %}>All statuses</option>
+      {% for s in all_statuses %}
+      <option value="{{ s.value }}" {% if filters.status == s %}selected{% endif %}>{{ s.value }}</option>
+      {% endfor %}
+    </select>
+  </label>
+
+  <label>
+    Category
+    <select name="category" data-testid="filter-category">
+      <option value="" {% if filters.category is none %}selected{% endif %}>All categories</option>
+      {% for c in all_categories %}
+      <option value="{{ c.value }}" {% if filters.category == c %}selected{% endif %}>{{ c.value }}</option>
+      {% endfor %}
+    </select>
+  </label>
+
+  <label>
+    Priority
+    <select name="priority" data-testid="filter-priority">
+      <option value="" {% if filters.priority is none %}selected{% endif %}>All priorities</option>
+      {% for p in all_priorities %}
+      <option value="{{ p.value }}" {% if filters.priority == p %}selected{% endif %}>{{ p.value }}</option>
+      {% endfor %}
+    </select>
+  </label>
+
+  <button type="submit" data-testid="filter-apply">Apply filters</button>
+  <a class="button-link" href="/" data-testid="filter-clear">Clear</a>
+</form>
+
+<p class="count" data-testid="result-count">{{ tickets|length }} of {{ total_count }} tickets shown</p>
+
+<table class="ticket-table" data-testid="ticket-list">
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Customer</th>
+      <th>Subject</th>
+      <th>Category</th>
+      <th>Priority</th>
+      <th>Status</th>
+      <th>Created (UTC)</th>
+      <th>Draft</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for t in tickets %}
+    <tr data-testid="ticket-row-{{ t.id }}">
+      <td data-testid="ticket-cell-id-{{ t.id }}">
+        <a href="/tickets/{{ t.id }}" data-testid="ticket-link-{{ t.id }}">{{ t.id }}</a>
+      </td>
+      <td data-testid="ticket-cell-customer-{{ t.id }}">{{ t.customer_name }}</td>
+      <td data-testid="ticket-cell-subject-{{ t.id }}">{{ t.subject }}</td>
+      <td data-testid="ticket-cell-category-{{ t.id }}">{{ t.category.value }}</td>
+      <td data-testid="ticket-cell-priority-{{ t.id }}">{{ t.priority.value }}</td>
+      <td data-testid="ticket-cell-status-{{ t.id }}">{{ t.status.value }}</td>
+      <td data-testid="ticket-cell-created-{{ t.id }}">{{ t.created_at }}</td>
+      <td data-testid="ticket-cell-draft-{{ t.id }}">{{ "yes" if t.draft_response else "no" }}</td>
+    </tr>
+    {% else %}
+    <tr>
+      <td colspan="8" data-testid="empty-list">No tickets match the current filters.</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}
